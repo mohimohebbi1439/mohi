@@ -166,6 +166,13 @@ body{
   outline:3px solid rgba(47,143,230,.18);
   outline-offset:2px
 }
+.key.pressed{
+  transform:translateY(2px) scale(.97) !important;
+  background:#222f3d !important;
+  border-color:#222f3d !important;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.22) !important;
+}
+.key.pressed strong,.key.pressed small{color:#fff !important}
 .key.space{width:315px}
 .msg{
   display:none;margin-top:13px;padding:12px;border-radius:12px;
@@ -410,6 +417,17 @@ function finish(){
 }
 function reset(){pos=0;keys=0;errors=0;start=0;wrong=false;el("msg").classList.remove("show");stats();draw()}
 function load(){renderLessons();el("title").textContent=lessons[current][0];el("desc").textContent=lessons[current][1];reset()}
+function keyElFromCode(code){
+ var pairs={
+  KeyQ:"ض",KeyW:"ص",KeyE:"ث",KeyR:"ق",KeyT:"ف",KeyY:"غ",KeyU:"ع",KeyI:"ه",KeyO:"خ",KeyP:"ح",
+  KeyA:"ش",KeyS:"س",KeyD:"ی",KeyF:"ب",KeyG:"ل",KeyH:"ا",KeyJ:"ت",KeyK:"ن",KeyL:"م",Semicolon:"ک",Quote:"گ",
+  KeyZ:"ظ",KeyX:"ط",KeyC:"ز",KeyV:"ر",KeyB:"ذ",KeyN:"د",KeyM:"ئ",Comma:"و",Period:".",Space:" "
+ };
+ var ch=pairs[code]; if(ch===undefined)return null;
+ var ks=document.querySelectorAll(".key");
+ for(var i=0;i<ks.length;i++) if(ks[i].getAttribute("data-c")===ch) return ks[i];
+ return null;
+}
 function expectedCode(ch){
  var info=map[ch]; if(!info)return "";
  var k=info[0];
@@ -423,6 +441,7 @@ function expectedCode(ch){
 }
 document.addEventListener("keydown",function(e){
  if(["Shift","Alt","Control","Meta","Tab","CapsLock","Escape","ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].indexOf(e.key)>=0)return;
+ var pressedKey=keyElFromCode(e.code); if(pressedKey)pressedKey.classList.add("pressed");
  var t=norm(lessons[current][2]);if(pos>=t.length)return;
  var expected=t[pos], code=expectedCode(expected);
  var got=norm(e.key);if(got==="Spacebar")got=" ";
@@ -430,6 +449,9 @@ document.addEventListener("keydown",function(e){
  e.preventDefault();if(!start)start=Date.now();keys++;
  if(correct){pos++;wrong=false}else{errors++;wrong=true}
  stats();draw();if(pos>=t.length)finish()
+});
+document.addEventListener("keyup",function(e){
+ var pressedKey=keyElFromCode(e.code); if(pressedKey)pressedKey.classList.remove("pressed");
 });
 el("restart").onclick=reset;keyboard();load();
 </script>

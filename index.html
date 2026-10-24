@@ -131,7 +131,7 @@ var rows=[
 [["ش","A"],["س","S"],["ی","D"],["ب","F"],["ل","G"],["ا","H"],["ت","J"],["ن","K"],["م","L"],["ک",";"],["گ","'"]],
 [["ظ","Z"],["ط","X"],["ز","C"],["ر","V"],["ذ","B"],["د","N"],["ئ","M"],["و",","],[".","." ]]
 ];
-var current=+(localStorage.tt_current||0), unlocked=+(localStorage.tt_unlocked||0), pos=0, keys=0, errors=0, start=0, wrong=false;
+var current=+(localStorage.tt2_current||0), unlocked=+(localStorage.tt2_unlocked||0), pos=0, keys=0, errors=0, start=0, wrong=false;
 function el(x){return document.getElementById(x)}
 function norm(s){return s.replace(/ي/g,"ی").replace(/ك/g,"ک").replace(/\u200c/g," ")}
 function renderLessons(){
@@ -139,7 +139,7 @@ function renderLessons(){
  lessons.forEach(function(l,i){
   var d=document.createElement("div"); d.className="lesson"+(i===current?" active":"")+(i>unlocked?" lock":"");
   d.innerHTML="<b>"+l[0]+"</b><span>"+(i>unlocked?"قفل":"آماده تمرین")+"</span>";
-  d.onclick=function(){if(i<=unlocked){current=i;localStorage.tt_current=i;load()}};
+  d.onclick=function(){if(i<=unlocked){current=i;localStorage.tt2_current=i;load()}};
   box.appendChild(d);
  });
  var p=Math.round(unlocked/(lessons.length-1)*100); el("pct").textContent=p+"٪"; el("bar").style.width=p+"%";
@@ -168,7 +168,7 @@ function stats(){
 }
 function finish(){
  var a=stats(), m=el("msg");m.classList.add("show");
- if(a>=90){m.innerHTML="تمام شد. دقت: <b>"+a+"٪</b>. مرحله بعد باز شد.";if(current===unlocked&&unlocked<lessons.length-1){unlocked++;localStorage.tt_unlocked=unlocked}}
+ if(a>=90){m.innerHTML="تمام شد. دقت: <b>"+a+"٪</b>. مرحله بعد باز شد.";if(current===unlocked&&unlocked<lessons.length-1){unlocked++;localStorage.tt2_unlocked=unlocked}}
  else m.innerHTML="دقت <b>"+a+"٪</b> است. همین مرحله را تکرار کن تا حداقل ۹۰٪.";
  renderLessons()
 }

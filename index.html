@@ -138,13 +138,40 @@ body{
   background:#fbfdff;border:1px solid var(--line);border-radius:18px;overflow:hidden
 }
 .handLayer{position:absolute;inset:0;pointer-events:none;z-index:6}
-.palm{position:absolute;width:165px;height:76px;border-radius:48px 48px 38px 38px;background:rgba(178,210,240,.18);border:1px solid rgba(84,135,184,.20);box-shadow:0 8px 18px rgba(79,118,154,.06);z-index:1}
+.palm{
+  position:absolute;width:175px;height:82px;border-radius:54px 54px 42px 42px;
+  background:rgba(91,166,226,.42);
+  border:2px solid rgba(38,120,190,.62);
+  box-shadow:0 10px 24px rgba(47,143,230,.18);
+  z-index:2
+}
 .palm.left{left:0;top:0;transform:rotate(4deg)}
 .palm.right{right:auto;left:0;top:0;transform:rotate(-4deg)}
-.tipFinger{position:absolute;width:38px;height:38px;border-radius:14px;background:rgba(255,255,255,.72);border:2px solid rgba(84,135,184,.38);box-shadow:0 3px 8px rgba(66,97,126,.08);transition:left .16s ease,top .16s ease,transform .16s ease,background .16s ease,box-shadow .16s ease;z-index:3}
-.tipFinger:after{content:"";position:absolute;left:8px;right:8px;top:5px;height:8px;border-radius:8px;background:rgba(220,234,247,.9)}
-.tipFinger.f-thumb{width:54px;height:28px;border-radius:14px}
-.tipFinger.active{background:rgba(123,196,255,.70);border-color:#2689dc;box-shadow:0 0 0 4px rgba(47,143,230,.16),0 8px 18px rgba(47,143,230,.18);transform:scale(1.05)}
+.palmLabel{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  color:#155487;font-size:12px;font-weight:800;white-space:nowrap
+}
+.tipFinger{
+  position:absolute;width:42px;height:68px;border-radius:21px 21px 14px 14px;
+  background:rgba(126,195,247,.58);
+  border:2px solid rgba(36,124,195,.72);
+  box-shadow:0 5px 14px rgba(47,143,230,.16);
+  transform-origin:50% 100%;
+  transition:left .16s ease,top .16s ease,transform .16s ease,background .16s ease,box-shadow .16s ease;
+  z-index:4
+}
+.tipFinger:after{
+  content:"";position:absolute;left:9px;right:9px;top:7px;height:12px;
+  border-radius:10px;background:rgba(234,246,255,.95);
+  border:1px solid rgba(71,137,192,.25)
+}
+.tipFinger.f-thumb{width:58px;height:34px;border-radius:18px}
+.tipFinger.active{
+  background:rgba(33,150,243,.88);
+  border-color:#0d6fbd;
+  box-shadow:0 0 0 5px rgba(47,143,230,.20),0 10px 22px rgba(47,143,230,.28);
+  transform:translateY(-3px) scale(1.08)
+}
 .keyboard{
   position:relative;z-index:1;
   direction:ltr;margin-top:0;display:flex;flex-direction:column;
@@ -293,8 +320,8 @@ body{
 
       <div class="kbWrap">
         <div class="handLayer" id="handLayer">
-          <div class="palm left"></div>
-          <div class="palm right"></div>
+          <div class="palm left"><span class="palmLabel">دست چپ</span></div>
+          <div class="palm right"><span class="palmLabel">دست راست</span></div>
         </div>
         <div class="keyboard" id="kb"></div>
       </div>
@@ -308,7 +335,7 @@ body{
   <span style="background:#e2f0ff;border:1px solid #8fc0ee;padding:5px 8px;border-radius:8px">حلقه راست</span>
   <span style="background:#ebe8ff;border:1px solid #aaa1ee;padding:5px 8px;border-radius:8px">کوچک راست</span>
 </div>
-      <div class="note">دست راهنما روی ردیف پایه می‌ماند و انگشت صحیح برای هر کلید حرکت می‌کند. سایت کلید فیزیکی را تشخیص می‌دهد؛ بنابراین لازم نیست زبان کیبورد سیستم را روی فارسی بگذاری. مرورگر فقط نمی‌تواند تشخیص دهد واقعاً با کدام انگشت کلید را زده‌ای. به همین دلیل انگشت صحیح برای هر حرف روشن می‌شود و باید خودت همان انگشت را استفاده کنی.</div>
+      <div class="note">دست‌های آبی روی خود کیبورد قرار دارند؛ نوک هر انگشت روی کلید پایه خودش است و انگشت فعال پررنگ‌تر می‌شود. سایت کلید فیزیکی را تشخیص می‌دهد؛ بنابراین لازم نیست زبان کیبورد سیستم را روی فارسی بگذاری. مرورگر فقط نمی‌تواند تشخیص دهد واقعاً با کدام انگشت کلید را زده‌ای. به همین دلیل انگشت صحیح برای هر حرف روشن می‌شود و باید خودت همان انگشت را استفاده کنی.</div>
     </main>
   </div>
 </div>
@@ -478,7 +505,7 @@ function keyCenter(ch){
  for(var i=0;i<ks.length;i++){
    if(ks[i].getAttribute("data-c")===ch){
      var r=ks[i].getBoundingClientRect();
-     return {left:r.left-wrap.left+r.width/2-19, top:r.top-wrap.top+r.height/2-19};
+     return {left:r.left-wrap.left+r.width/2-21, top:r.top-wrap.top+r.height/2-60};
    }
  }
  return {left:0,top:0};
@@ -489,8 +516,8 @@ function thumbPos(side){
    if(ks[i].getAttribute("data-c")===" "){
      var r=ks[i].getBoundingClientRect();
      return {
-       left:r.left-wrap.left+r.width/2+(side==="L"?-72:18)-27,
-       top:r.top-wrap.top+r.height/2-14
+       left:r.left-wrap.left+r.width/2+(side==="L"?-72:18)-29,
+       top:r.top-wrap.top+r.height/2-17
      };
    }
  }
@@ -503,8 +530,8 @@ function calcPositions(){
  };
  var lp=document.querySelector(".palm.left"), rp=document.querySelector(".palm.right");
  var li=basePos["L-index"], lpk=basePos["L-pinky"], ri=basePos["R-index"], rpk=basePos["R-pinky"];
- if(lp){lp.style.left=(lpk.left-28)+"px";lp.style.top=(li.top+34)+"px";}
- if(rp){rp.style.left=(ri.left-18)+"px";rp.style.top=(ri.top+34)+"px";}
+ if(lp){lp.style.left=(lpk.left-22)+"px";lp.style.top=(li.top+52)+"px";}
+ if(rp){rp.style.left=(ri.left-8)+"px";rp.style.top=(ri.top+52)+"px";}
  resetHandPositions();
 }
 function placeFinger(id,p){var e=handEls[id];if(!e||!p)return;e.style.left=p.left+"px";e.style.top=p.top+"px"}

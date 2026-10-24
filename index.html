@@ -174,6 +174,14 @@ body{
 }
 .key.pressed strong,.key.pressed small{color:#fff !important}
 .key.space{width:315px}
+.keyboard.blind .key strong,.keyboard.blind .key small{opacity:.10}
+.keyboard.blind .key.next strong{opacity:.22}
+.masteryline{
+  margin-top:12px;padding:10px 12px;border-radius:12px;
+  background:#f4f8fc;border:1px solid #dce6ef;color:#536575;
+  font-size:12px;line-height:1.8
+}
+.masteryline b{color:#17324a}
 .msg{
   display:none;margin-top:13px;padding:12px;border-radius:12px;
   background:var(--green-soft);border:1px solid #c8e7d2;
@@ -228,7 +236,7 @@ body{
     <main class="panel main">
       <div class="hero">
         <div><h1 id="title"></h1><div class="muted" id="desc"></div></div>
-        <div class="rule">مرحله بعد: دقت حداقل ۹۰٪</div>
+        <div class="rule" id="rule">معیار قبولی</div>
       </div>
 
       <div class="grid">
@@ -266,6 +274,7 @@ body{
   <button class="btn" id="restart">شروع دوباره</button>
 </div>
         </div>
+        <div class="masteryline" id="masteryLine"></div>
         <div class="msg" id="msg"></div>
       </div>
 
@@ -344,7 +353,23 @@ var lessons=[
 ["۴۱. ئ — اشاره راست پایین-داخل","ئ نیز با اشاره راست زده می‌شود.","تئتئتئتئتئتئتئ","اشاره راست مسئول د و ئ است."],
 ["۴۲. و — وسط راست به پایین","از ن با وسط راست به و برو.","نونونونونونونو","فقط وسط راست."],
 ["۴۳. نقطه — حلقه راست","نقطه با انگشت حلقه راست زده می‌شود.",".م.م.م.م.م.م.م","حلقه راست از م به نقطه حرکت کند."],
-["۴۴. مرور همه حروف","حالا تمرین ترکیبی انجام بده. هنوز اولویت با دقت و انگشت صحیح است، نه سرعت.","سلام. امروز برای تایپ درست تمرین می‌کنم. دست‌ها روی ردیف پایه می‌مانند.","اگر انگشت اشتباه استفاده کردی، حتی اگر حرف درست ثبت شد، خودت تمرین را متوقف و تکرار کن."]
+["۴۴. مرور همه حروف","حالا تمرین ترکیبی انجام بده. هنوز اولویت با دقت و انگشت صحیح است، نه سرعت.","سلام. امروز برای تایپ درست تمرین می‌کنم. دست‌ها روی ردیف پایه می‌مانند.","اگر انگشت اشتباه استفاده کردی، حتی اگر حرف درست ثبت شد، خودت تمرین را متوقف و تکرار کن."],
+["۴۵. ترکیب‌های پرتکرار","ترکیب‌های رایج فارسی را پشت‌سرهم تمرین کن تا حرکت بین انگشت‌ها خودکار شود.","می به در از را بر تر ان ها با شد می به در از را بر تر ان ها با شد","به ریتم یکنواخت توجه کن؛ مکث طولانی بین دو حرف نداشته باش."],
+["۴۶. تعویض سریع دو دست","هدف این مرحله جابه‌جایی روان بین دست چپ و راست است.","کتاب سلام تلاش ایمان تمام لباس زمان بیان کتاب سلام تلاش ایمان","بدن ثابت بماند؛ فقط انگشت مربوط به هر حرف حرکت کند."],
+["۴۷. کنترل دست چپ","کلمات با بار بیشتر روی دست چپ برای استقلال انگشت‌ها.","سیب شبی لبریز سرسبز بسیج ریزش سیب شبی لبریز سرسبز","مچ چپ را نچرخان؛ انگشت‌ها مستقل حرکت کنند."],
+["۴۸. کنترل دست راست","کلمات با بار بیشتر روی دست راست برای استقلال انگشت‌ها.","تمام مکان نمک امکان تکان تمام مکان نمک امکان تکان","برای م و ک از انگشت‌های درست استفاده کن، نه اشاره."],
+["۴۹. تمرکز روی انگشت‌های کوچک","انگشت کوچک معمولاً ضعیف‌ترین بخش تایپ ده‌انگشتی است؛ این مرحله عمداً سخت‌تر است.","کشک شک حش ضح کشک شک حش ضح شک کشک حش ضح","سرعت را قربانی فرم درست نکن."],
+["۵۰. فشار روی انگشت‌های اشاره","اشاره‌ها بیشترین کلید را پوشش می‌دهند. حرکت‌های داخل و بالا و پایین را ترکیب می‌کنیم.","بل اقر فغ رد ذئ بل اقر فغ رد ذئ بلافاصله قرار دارد","بعد از هر حرکت دور، به خانه ب و ت برگرد."],
+["۵۱. کلمات متوسط","دیگر تمرین حرفی نیست؛ کلمات ۴ تا ۶ حرفی با ترکیب چند ردیف.","تمرین تایپ درست باعث افزایش دقت و کنترل دست می‌شود","کلمه را نگاه کن، اما به کیبورد نگاه نکن."],
+["۵۲. کلمات بلند","حرکت پیوسته در کلمات طولانی را تمرین کن.","برنامه‌ریزی تمرکز یادگیری پیشرفت عملکرد استمرار مهارت","ریتم ثابت مهم‌تر از انفجار سرعت است."],
+["۵۳. جمله کوتاه","از این مرحله باید جریان جمله را حفظ کنی، نه فقط تک‌حرف‌ها را.","من هر روز کمی تمرین می‌کنم تا بدون نگاه کردن دقیق و روان تایپ کنم.","چشم روی متن بماند و دست‌ها روی ردیف پایه."],
+["۵۴. جمله با تغییر ریتم","کلمات کوتاه و بلند پشت سر هم می‌آیند تا ریتم واقعی تایپ شبیه‌سازی شود.","یک تایپیست خوب فقط سریع نیست؛ دقیق، آرام و پیوسته تایپ می‌کند.","بعد از خطا عجله نکن؛ ریتم را دوباره پیدا کن."],
+["۵۵. پاراگراف دقت","اینجا هدف اصلی دقت بالاست. هر خطا ارزش بیشتری دارد.","تایپ ده انگشتی زمانی مفید می‌شود که جای کلیدها را بدون فکر کردن پیدا کنی. تمرین منظم باعث می‌شود حرکت انگشت‌ها به مرور خودکار شود.","این مرحله را با تمرکز کامل بزن؛ سرعت هدف دوم است."],
+["۵۶. حافظه عضلانی ۱","برچسب حروف روی کیبورد مجازی محو می‌شود. باید جای کلیدها را از حافظه پیدا کنی.","سلام دوست من. امروز بدون نگاه کردن به صفحه کلید تمرین می‌کنم.","اگر دنبال حروف می‌گردی، به جای نگاه کردن مکث کن و جای آن را به یاد بیاور."],
+["۵۷. حافظه عضلانی ۲","بدون کمک نوشته‌های کیبورد، کلمات متنوع‌تری را تایپ کن.","یادگیری واقعی وقتی شروع می‌شود که دست قبل از فکر کردن مسیر کلید را پیدا کند.","فقط در صورت نیاز از رنگ انگشت‌ها کمک بگیر."],
+["۵۸. فشار سرعت کنترل‌شده","حالا دقت باید حفظ شود و هم‌زمان سرعت حداقلی هم لازم است.","تمرین پیوسته و درست سرعت تایپ را بالا می‌برد و خطاهای اضافی را کمتر می‌کند.","شتاب نکن؛ سرعت باید نتیجه حرکت درست باشد."],
+["۵۹. آزمون پیشرفته","یک متن طولانی‌تر با ترکیب کامل حروف برای سنجش پایداری.","برای رسیدن به مهارت واقعی باید بتوانی چند جمله را پشت سر هم با دقت بالا و بدون نگاه کردن به صفحه کلید تایپ کنی. هدف این تمرین حفظ کیفیت در طول زمان است.","اگر در پایان خسته شدی ولی فرم دست خراب نشد، پیشرفت واقعی کرده‌ای."],
+["۶۰. آزمون نهایی تسلط","مرحله نهایی: دقت بالا، سرعت مناسب و دو اجرای موفق پشت سر هم.","تایپ ده انگشتی یک مهارت حرکتی است. سرعت زمانی ارزش دارد که همراه با دقت، ریتم ثابت و استفاده صحیح از انگشت‌ها باشد. این مرحله پایان دوره پایه و شروع تمرین حرفه‌ای است.","برای قبولی نهایی باید دو بار پشت سر هم معیارهای مرحله را رد کنی."]
 ];
 var rows=[
 [["ض","Q"],["ص","W"],["ث","E"],["ق","R"],["ف","T"],["غ","Y"],["ع","U"],["ه","I"],["خ","O"],["ح","P"]],
@@ -352,13 +377,36 @@ var rows=[
 [["ظ","Z"],["ط","X"],["ز","C"],["ر","V"],["ذ","B"],["د","N"],["ئ","M"],["و",","],[".","." ]]
 ];
 var current=+(localStorage.tt2_current||0), unlocked=+(localStorage.tt2_unlocked||0), pos=0, keys=0, errors=0, start=0, wrong=false;
+var errorChars={}, passStreaks=JSON.parse(localStorage.tt_mastery||"{}");
 function el(x){return document.getElementById(x)}
 function norm(s){return s.replace(/ي/g,"ی").replace(/ك/g,"ک").replace(/\u200c/g," ")}
+function criteria(i){
+  if(i<9) return {acc:95,wpm:0,passes:1};
+  if(i<23) return {acc:96,wpm:6,passes:1};
+  if(i<34) return {acc:97,wpm:10,passes:1};
+  if(i<44) return {acc:97,wpm:12,passes:2};
+  if(i<55) return {acc:98,wpm:15,passes:2};
+  if(i<58) return {acc:98,wpm:18,passes:2};
+  if(i<59) return {acc:98,wpm:22,passes:2};
+  return {acc:98,wpm:25,passes:2};
+}
+function currentWpm(){
+  var m=start?(Date.now()-start)/60000:0;
+  return m?Math.round((pos/5)/m):0;
+}
+function updateMasteryUI(){
+  var cr=criteria(current), streak=+(passStreaks[current]||0);
+  el("rule").textContent="قبولی: دقت "+cr.acc+"٪"+(cr.wpm?(" + "+cr.wpm+" WPM"):"");
+  el("masteryLine").innerHTML="تسلط این مرحله: <b>"+streak+" از "+cr.passes+"</b> اجرای موفق پشت سر هم"
+    +(current>=55?" — حالت حافظه عضلانی فعال است.":"");
+  el("kb").classList.toggle("blind",current>=55);
+}
 function renderLessons(){
  var box=el("lessons"); box.innerHTML="";
  lessons.forEach(function(l,i){
   var d=document.createElement("div"); d.className="lesson"+(i===current?" active":"")+(i>unlocked?" lock":"");
-  d.innerHTML="<b>"+l[0]+"</b><span>"+(i>unlocked?"قفل":"آماده تمرین")+"</span>";
+  var cr=criteria(i), st=+(passStreaks[i]||0);
+  d.innerHTML="<b>"+l[0]+"</b><span>"+(i>unlocked?"قفل":("تسلط "+st+"/"+cr.passes))+"</span>";
   d.onclick=function(){if(i<=unlocked){current=i;localStorage.tt2_current=i;load()}};
   box.appendChild(d);
  });
@@ -410,16 +458,38 @@ function guide(){
 }
 function stats(){
  var a=keys?Math.max(0,Math.round((keys-errors)/keys*100)):100;el("acc").textContent=a+"٪";el("err").textContent=errors;
- var m=start?(Date.now()-start)/60000:0;el("wpm").textContent=m?Math.round((pos/5)/m):0;return a
+ el("wpm").textContent=currentWpm();return a
+}
+function weakKeysText(){
+ var entries=Object.keys(errorChars).map(function(k){return [k,errorChars[k]]}).sort(function(a,b){return b[1]-a[1]});
+ if(!entries.length)return "";
+ return entries.slice(0,3).map(function(x){return (x[0]===" "?"فاصله":x[0])+" ("+x[1]+" خطا)"}).join("، ");
 }
 function finish(){
- var a=stats(), m=el("msg");m.classList.add("show");
- if(a>=90){m.innerHTML="تمام شد. دقت: <b>"+a+"٪</b>. مرحله بعد باز شد.";if(current===unlocked&&unlocked<lessons.length-1){unlocked++;localStorage.tt2_unlocked=unlocked}}
- else m.innerHTML="دقت <b>"+a+"٪</b> است. همین مرحله را تکرار کن تا حداقل ۹۰٪.";
- renderLessons()
+ var a=stats(), w=currentWpm(), cr=criteria(current), m=el("msg");
+ var ok=a>=cr.acc && w>=cr.wpm;
+ m.classList.add("show");
+ if(ok){
+   passStreaks[current]=+(passStreaks[current]||0)+1;
+   if(passStreaks[current]>=cr.passes){
+     m.innerHTML="مرحله مسلط شد: <b>"+a+"٪ دقت</b> و <b>"+w+" WPM</b>. مرحله بعد باز شد.";
+     if(current===unlocked&&unlocked<lessons.length-1){unlocked++;localStorage.tt2_unlocked=unlocked}
+   }else{
+     m.innerHTML="اجرای موفق <b>"+passStreaks[current]+" از "+cr.passes+"</b>. برای تثبیت، همین مرحله را یک بار دیگر با همین کیفیت انجام بده.";
+   }
+ }else{
+   passStreaks[current]=0;
+   var weak=weakKeysText();
+   var need=[];
+   if(a<cr.acc)need.push("دقت باید حداقل "+cr.acc+"٪ باشد");
+   if(w<cr.wpm)need.push("سرعت باید حداقل "+cr.wpm+" WPM باشد");
+   m.innerHTML="هنوز مسلط نشده‌ای: "+need.join(" و ")+(weak?("<br>کلیدهای ضعیف این دور: <b>"+weak+"</b>"):"");
+ }
+ localStorage.tt_mastery=JSON.stringify(passStreaks);
+ renderLessons();updateMasteryUI()
 }
-function reset(){pos=0;keys=0;errors=0;start=0;wrong=false;el("msg").classList.remove("show");stats();draw()}
-function load(){renderLessons();el("title").textContent=lessons[current][0];el("desc").textContent=lessons[current][1];reset()}
+function reset(){pos=0;keys=0;errors=0;start=0;wrong=false;errorChars={};el("msg").classList.remove("show");stats();draw();updateMasteryUI()}
+function load(){renderLessons();el("title").textContent=lessons[current][0];el("desc").textContent=lessons[current][1];reset();updateMasteryUI()}
 var soundOn = localStorage.tt_sound !== "off";
 var audioCtx = null;
 function ensureAudio(){
@@ -481,7 +551,7 @@ document.addEventListener("keydown",function(e){
  var correct=(got===expected)||(code&&e.code===code);
  playTone(correct);
  e.preventDefault();if(!start)start=Date.now();keys++;
- if(correct){pos++;wrong=false}else{errors++;wrong=true}
+ if(correct){pos++;wrong=false}else{errors++;wrong=true;errorChars[expected]=(errorChars[expected]||0)+1}
  stats();draw();if(pos>=t.length)finish()
 });
 document.addEventListener("keyup",function(e){
@@ -494,7 +564,7 @@ el("soundToggle").onclick=function(){
   syncSoundButton();
   if(soundOn){ ensureAudio(); playTone(true); }
 };
-keyboard();load();syncSoundButton();
+keyboard();load();syncSoundButton();updateMasteryUI();
 </script>
 </body>
 </html>

@@ -261,7 +261,10 @@ body{
             <div class="stat">خطا <b id="err">۰</b></div>
             <div class="stat">سرعت <b id="wpm">۰</b> WPM</div>
           </div>
-          <button class="btn" id="restart">شروع دوباره</button>
+          <div style="display:flex;gap:8px;align-items:center">
+  <button class="btn" id="soundToggle" type="button">🔊 صدا روشن</button>
+  <button class="btn" id="restart">شروع دوباره</button>
+</div>
         </div>
         <div class="msg" id="msg"></div>
       </div>
@@ -417,6 +420,36 @@ function finish(){
 }
 function reset(){pos=0;keys=0;errors=0;start=0;wrong=false;el("msg").classList.remove("show");stats();draw()}
 function load(){renderLessons();el("title").textContent=lessons[current][0];el("desc").textContent=lessons[current][1];reset()}
+var soundOn = localStorage.tt_sound !== "off";
+var audioCtx = null;
+function ensureAudio(){
+  if(!audioCtx){
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(AC) audioCtx = new AC();
+  }
+  if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+}
+function playTone(ok){
+  if(!soundOn) return;
+  ensureAudio();
+  if(!audioCtx) return;
+  var now = audioCtx.currentTime;
+  var osc = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
+  osc.type = ok ? "triangle" : "square";
+  osc.frequency.setValueAtTime(ok ? 520 : 180, now);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(ok ? 0.055 : 0.07, now + 0.002);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + (ok ? 0.045 : 0.09));
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + (ok ? 0.05 : 0.1));
+}
+function syncSoundButton(){
+  var b=el("soundToggle");
+  if(b) b.textContent = soundOn ? "🔊 صدا روشن" : "🔇 صدا خاموش";
+}
 function keyElFromCode(code){
  var pairs={
   KeyQ:"ض",KeyW:"ص",KeyE:"ث",KeyR:"ق",KeyT:"ف",KeyY:"غ",KeyU:"ع",KeyI:"ه",KeyO:"خ",KeyP:"ح",
@@ -446,6 +479,7 @@ document.addEventListener("keydown",function(e){
  var expected=t[pos], code=expectedCode(expected);
  var got=norm(e.key);if(got==="Spacebar")got=" ";
  var correct=(got===expected)||(code&&e.code===code);
+ playTone(correct);
  e.preventDefault();if(!start)start=Date.now();keys++;
  if(correct){pos++;wrong=false}else{errors++;wrong=true}
  stats();draw();if(pos>=t.length)finish()
@@ -453,7 +487,14 @@ document.addEventListener("keydown",function(e){
 document.addEventListener("keyup",function(e){
  var pressedKey=keyElFromCode(e.code); if(pressedKey)pressedKey.classList.remove("pressed");
 });
-el("restart").onclick=reset;keyboard();load();
+el("restart").onclick=reset;
+el("soundToggle").onclick=function(){
+  soundOn=!soundOn;
+  localStorage.tt_sound=soundOn?"on":"off";
+  syncSoundButton();
+  if(soundOn){ ensureAudio(); playTone(true); }
+};
+keyboard();load();syncSoundButton();
 </script>
 </body>
 </html>

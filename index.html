@@ -212,7 +212,7 @@ body{
 <body>
 <div class="app">
   <div class="top">
-    <div><div class="brand">تایپ ده‌انگشتی فارسی</div><div class="muted">آموزش مرحله‌ای جای درست انگشت‌ها، نه فقط تست سرعت</div></div>
+    <div><div class="brand">تایپ ده‌انگشتی فارسی</div><div class="muted">آموزش جای درست انگشت‌ها بر اساس کلید فیزیکی — مستقل از زبان کیبورد</div></div>
     <div class="progress"><div class="muted">پیشرفت دوره: <b id="pct">۰٪</b></div><div class="bar"><i id="bar"></i></div></div>
   </div>
 
@@ -270,7 +270,7 @@ body{
   <span style="background:#e2f0ff;border:1px solid #8fc0ee;padding:5px 8px;border-radius:8px">حلقه راست</span>
   <span style="background:#ebe8ff;border:1px solid #aaa1ee;padding:5px 8px;border-radius:8px">کوچک راست</span>
 </div>
-      <div class="note">مرورگر می‌تواند بفهمد کدام کلید را زده‌ای، اما نمی‌تواند تشخیص دهد واقعاً با کدام انگشت زده‌ای. به همین دلیل انگشت صحیح برای هر حرف روشن می‌شود و باید خودت همان انگشت را استفاده کنی.</div>
+      <div class="note">سایت کلید فیزیکی را تشخیص می‌دهد؛ بنابراین لازم نیست زبان کیبورد سیستم را روی فارسی بگذاری. مرورگر فقط نمی‌تواند تشخیص دهد واقعاً با کدام انگشت کلید را زده‌ای. به همین دلیل انگشت صحیح برای هر حرف روشن می‌شود و باید خودت همان انگشت را استفاده کنی.</div>
     </main>
   </div>
 </div>
@@ -410,10 +410,26 @@ function finish(){
 }
 function reset(){pos=0;keys=0;errors=0;start=0;wrong=false;el("msg").classList.remove("show");stats();draw()}
 function load(){renderLessons();el("title").textContent=lessons[current][0];el("desc").textContent=lessons[current][1];reset()}
+function expectedCode(ch){
+ var info=map[ch]; if(!info)return "";
+ var k=info[0];
+ if(k==="Space")return "Space";
+ if(k===";")return "Semicolon";
+ if(k==="'")return "Quote";
+ if(k===",")return "Comma";
+ if(k===".")return "Period";
+ if(/^[A-Z]$/.test(k))return "Key"+k;
+ return "";
+}
 document.addEventListener("keydown",function(e){
  if(["Shift","Alt","Control","Meta","Tab","CapsLock","Escape","ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].indexOf(e.key)>=0)return;
- var t=norm(lessons[current][2]);if(pos>=t.length)return;e.preventDefault();if(!start)start=Date.now();
- var got=norm(e.key);if(got==="Spacebar")got=" ";keys++;if(got===t[pos]){pos++;wrong=false}else{errors++;wrong=true}stats();draw();if(pos>=t.length)finish()
+ var t=norm(lessons[current][2]);if(pos>=t.length)return;
+ var expected=t[pos], code=expectedCode(expected);
+ var got=norm(e.key);if(got==="Spacebar")got=" ";
+ var correct=(got===expected)||(code&&e.code===code);
+ e.preventDefault();if(!start)start=Date.now();keys++;
+ if(correct){pos++;wrong=false}else{errors++;wrong=true}
+ stats();draw();if(pos>=t.length)finish()
 });
 el("restart").onclick=reset;keyboard();load();
 </script>

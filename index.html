@@ -153,6 +153,19 @@ body{
   box-shadow:0 8px 20px rgba(47,143,230,.16)
 }
 .key.next strong{color:#155487}
+.key.fp-l-pinky{background:#f3e8ff;border-color:#d8b4fe}
+.key.fp-l-ring{background:#ffe4ef;border-color:#f9a8c6}
+.key.fp-l-middle{background:#fff0dc;border-color:#fdba74}
+.key.fp-l-index{background:#fff8cc;border-color:#f2d35e}
+.key.fp-r-index{background:#e6f8dc;border-color:#9dd67b}
+.key.fp-r-middle{background:#dcf7f3;border-color:#79d3c4}
+.key.fp-r-ring{background:#e2f0ff;border-color:#8fc0ee}
+.key.fp-r-pinky{background:#ebe8ff;border-color:#aaa1ee}
+.key.fp-space{background:#edf1f5;border-color:#cfd8e3}
+.key.next{
+  outline:3px solid rgba(47,143,230,.18);
+  outline-offset:2px
+}
 .key.space{width:315px}
 .msg{
   display:none;margin-top:13px;padding:12px;border-radius:12px;
@@ -247,6 +260,16 @@ body{
       </div>
 
       <div class="keyboard" id="kb"></div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:14px;font-size:11px;color:#637282">
+  <span style="background:#f3e8ff;border:1px solid #d8b4fe;padding:5px 8px;border-radius:8px">کوچک چپ</span>
+  <span style="background:#ffe4ef;border:1px solid #f9a8c6;padding:5px 8px;border-radius:8px">حلقه چپ</span>
+  <span style="background:#fff0dc;border:1px solid #fdba74;padding:5px 8px;border-radius:8px">وسط چپ</span>
+  <span style="background:#fff8cc;border:1px solid #f2d35e;padding:5px 8px;border-radius:8px">اشاره چپ</span>
+  <span style="background:#e6f8dc;border:1px solid #9dd67b;padding:5px 8px;border-radius:8px">اشاره راست</span>
+  <span style="background:#dcf7f3;border:1px solid #79d3c4;padding:5px 8px;border-radius:8px">وسط راست</span>
+  <span style="background:#e2f0ff;border:1px solid #8fc0ee;padding:5px 8px;border-radius:8px">حلقه راست</span>
+  <span style="background:#ebe8ff;border:1px solid #aaa1ee;padding:5px 8px;border-radius:8px">کوچک راست</span>
+</div>
       <div class="note">مرورگر می‌تواند بفهمد کدام کلید را زده‌ای، اما نمی‌تواند تشخیص دهد واقعاً با کدام انگشت زده‌ای. به همین دلیل انگشت صحیح برای هر حرف روشن می‌شود و باید خودت همان انگشت را استفاده کنی.</div>
     </main>
   </div>
@@ -333,8 +356,34 @@ function renderLessons(){
 }
 function keyboard(){
  var kb=el("kb"); kb.innerHTML="";
- rows.forEach(function(r){var row=document.createElement("div");row.className="row";r.forEach(function(k){var d=document.createElement("div");d.className="key";d.setAttribute("data-c",k[0]);d.innerHTML="<small>"+k[1]+"</small><strong>"+k[0]+"</strong>";row.appendChild(d)});kb.appendChild(row)});
- var row=document.createElement("div");row.className="row";var s=document.createElement("div");s.className="key space";s.setAttribute("data-c"," ");s.innerHTML="<strong>فاصله</strong>";row.appendChild(s);kb.appendChild(row)
+ function clsFor(ch){
+   var i=map[ch];
+   if(!i)return "";
+   if(i[1]==="L"&&i[2]==="pinky")return " fp-l-pinky";
+   if(i[1]==="L"&&i[2]==="ring")return " fp-l-ring";
+   if(i[1]==="L"&&i[2]==="middle")return " fp-l-middle";
+   if(i[1]==="L"&&i[2]==="index")return " fp-l-index";
+   if(i[1]==="R"&&i[2]==="index")return " fp-r-index";
+   if(i[1]==="R"&&i[2]==="middle")return " fp-r-middle";
+   if(i[1]==="R"&&i[2]==="ring")return " fp-r-ring";
+   if(i[1]==="R"&&i[2]==="pinky")return " fp-r-pinky";
+   return "";
+ }
+ rows.forEach(function(r){
+   var row=document.createElement("div");row.className="row";
+   r.forEach(function(k){
+     var d=document.createElement("div");
+     d.className="key"+clsFor(k[0]);
+     d.setAttribute("data-c",k[0]);
+     d.innerHTML="<small>"+k[1]+"</small><strong>"+k[0]+"</strong>";
+     row.appendChild(d)
+   });
+   kb.appendChild(row)
+ });
+ var row=document.createElement("div");row.className="row";
+ var s=document.createElement("div");s.className="key space fp-space";
+ s.setAttribute("data-c"," ");s.innerHTML="<strong>فاصله</strong>";
+ row.appendChild(s);kb.appendChild(row)
 }
 function draw(){
  var t=norm(lessons[current][2]), out="";
